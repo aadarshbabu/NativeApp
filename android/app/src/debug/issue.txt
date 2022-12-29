@@ -1,0 +1,16 @@
+C:\ESQLocal\dispatcher3.4\esqdispatcher\dispatcher-workflow-designer\src\main\webapp\dwd\controllers\datatable\datatable.js
+// Line no                    appKeyList[i].appKey  165
+
+
+// C:\ESQLocal\dispatcher3.4\esqdispatcher\dispatcher-workflow-designer\src\main\webapp\contacts\controllers\controller.js
+'.addContact click': function (el, ev) {  // Line no 2748
+
+        Dwd.Controllers.Base.showStatus( // 2823
+          $.i18n.prop('error.createLifecycleMandatory'), //
+          true
+        );
+		
+		//LIne no 5777
+		
+		
+		// selectedContactDispatcherType == 'IMS'

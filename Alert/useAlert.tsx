@@ -4,7 +4,7 @@ import Alert from './Alert'
 function useAlert() {
 
     const callAlert = () => {
-        <Alert />
+        Alert()
     }
     return () => {
         callAlert()

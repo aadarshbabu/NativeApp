@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, GestureResponderEvent, Alert } from 'react-native';
 import img from "../../assets/img/img.jpg"
 import Button from '../../components/Button';
@@ -13,15 +13,16 @@ function Login({ navigation }: { navigation: any }) {
         email: '',
         password: ''
     })
-    function test(e: GestureResponderEvent) {
-        console.log("Function Call")
+    function login(e: GestureResponderEvent) {
         if (userData.email.length < 10 || userData.password.length < 5) {
-            Alert.alert("Login", "Invalid User Email and password is not Valid.")
-            return false;
+            Alert.alert("Login", "Invalid User Email and password is not Valid.");
         }
         auth().signInWithEmailAndPassword(userData.email, userData.password).then(() => {
-            Alert.alert("Login", "Login Successfull")
-            console.log("Success Full Sinup");
+            Alert.alert("Login", "Login Success")
+            setTimeout(() => {
+                navigation.navigate("Home");
+            }, 1000)
+
         }).catch((err) => {
             Alert.alert("Login", "Login Successfull")
             console.error(err.message)
@@ -44,7 +45,7 @@ function Login({ navigation }: { navigation: any }) {
             <View style={style.userInput}>
                 <Text style={{ fontSize: 25, textAlign: 'center', padding: 10, color: '#992424' }} > Login </Text>
                 <TextInput style={style.textInput}
-                    keyboardType="email-address"
+                    keyboardType='email-address'
                     placeholder='Enter a Email'
                     value={userData.email}
                     onChangeText={(e) => SetStateHandler(e, 'email')}
@@ -53,7 +54,7 @@ function Login({ navigation }: { navigation: any }) {
                     value={userData.password}
                     onChangeText={(e) => SetStateHandler(e, 'password')}
                 ></TextInput>
-                <Button pressFn={test} btnText={"Login"} />
+                <Button pressFn={login} btnText={"Login"} />
                 <Text style={[style.text, style.loginRedirect]} >
                     Not Register Yet Click hear to
                     <Text style={{ color: 'blue' }}
@@ -61,7 +62,6 @@ function Login({ navigation }: { navigation: any }) {
                     > Register </Text>
                 </Text>
             </View>
-
         </View>
 
     );

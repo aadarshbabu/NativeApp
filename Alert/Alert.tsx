@@ -3,8 +3,6 @@ import { View, Modal, Text, StyleSheet, Pressable } from 'react-native'
 
 function Alert() {
 
-    console.log("alert call")
-
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
@@ -41,6 +39,7 @@ function Alert() {
 
 const styles = StyleSheet.create({
     centeredView: {
+        flexDirection: 'row',
         flex: 1,
         justifyContent: "center",
         alignItems: "center",

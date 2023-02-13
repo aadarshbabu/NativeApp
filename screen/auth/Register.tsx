@@ -22,12 +22,12 @@ function Register({ navigation }: { navigation: any }) {
     password: ''
   })
 
-  // Login Function
-  function test(e: GestureResponderEvent) {
+  //  Function
+  function Register(e: GestureResponderEvent) {
     firestore().collection("users").add(userData); // Add the data from a firebase.
     auth().createUserWithEmailAndPassword(userData.email, userData.password).then(() => {
       console.log("user is created");
-      Alert();
+      navigation.navigate("Login")
     })
       .catch((err) => {
         console.log(err.message)
@@ -74,7 +74,7 @@ function Register({ navigation }: { navigation: any }) {
             onChangeText={(e) => SetStateHandler(e, 'password')}
           ></TextInput>
 
-          <Button pressFn={test} btnText={"Register Now"} />
+          <Button pressFn={Register} btnText={"Register Now"} />
 
           <Text style={[style.text, style.loginRedirect]} >
             Already Register Click Hear

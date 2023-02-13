@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { type PropsWithChildren } from 'react';
 import Register from './screen/auth/Register';
 import Login from './screen/auth/Login';
 import HomePage from './screen/Home/HomePage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SplashScreen from 'react-native-splash-screen'
 
 
 const stack = createNativeStackNavigator();
@@ -27,6 +28,9 @@ const Auth: React.FC = () => {
 };
 
 function App(): React.ReactNode {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
   return (
     <NavigationContainer>
 

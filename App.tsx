@@ -17,7 +17,8 @@ const Auth: React.FC = () => {
       <stack.Screen name='Login' options={{ headerShown: false }} component={Login} />
       <stack.Screen name='Home' options={
         {
-          title: "Home Page",
+          headerShown: false,
+          title: "Chat",
           headerStyle: {
             backgroundColor: '#f4511e'
           },

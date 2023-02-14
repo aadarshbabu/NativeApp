@@ -1,11 +1,42 @@
-import React, { useState, useRef, useCallback } from 'react'
-import { TextInput, View, StyleSheet, Alert, Text, ScrollView } from 'react-native'
+import React, { useState, useRef, useCallback, useEffect, useId } from 'react'
+import { TextInput, View, StyleSheet, Alert, Text, ScrollView, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { getAnswer } from '../../API/fetchAnswer';
+import Chat from '../../components/chat';
+import { BannerAd, TestIds, BannerAdSize } from 'react-native-google-mobile-ads';
 
-function HomePage() {
 
-    const [userMessage, setUserMessage] = useState<string[]>([]);
+type res = {
+    choices: object[]
+}
+
+function HomePage({ route }: { route: any }) {
+
+    const { userName }: { userName: string } = route.params;
+    console.log("USERNAME", userName)
+    const name = userName.split(" ")
+    const sortName = name[0][0] + name[1][0] // geting Array 0th element of the array and element 0th location char.
+
+    const [userMessage, setUserMessage] = useState<string[]>(["this is for test message"]);
     const [message, setMessage] = useState<string | undefined>();
+    const [response, setResponse] = useState<res[] | any>();
+
+    async function getAns(q: string) {
+        if (typeof message === 'string') {
+            const data: any = await getAnswer({ question: q });
+            let msg = data?.choices[0]?.text
+            setResponse(msg);
+        }
+    };
+
+    useEffect(() => {
+        setUserMessage(prev => {
+            if (typeof prev === 'object' && typeof message === 'string')
+                return [...prev, response]
+            return []
+        })
+
+    }, [response])
 
     const setInputMessage = (data: string) => {
         console.log(data)
@@ -14,6 +45,7 @@ function HomePage() {
             return true
         }
         setMessage(data)
+
     }
 
     function sendMessage() {
@@ -23,6 +55,8 @@ function HomePage() {
             return []
         }
         )
+        if (typeof message == 'string')
+            getAns(message)
         setMessage("")
     }
     const scrollRef = useRef<any>(null);
@@ -36,50 +70,33 @@ function HomePage() {
             width: '80%',
             minWidth: (message && (message?.length > 5 && message.length < 100) ? '80%' : '90%'),
             marginBottom: 5,
-            padding: 6,
+            padding: 10,
             borderColor: 'black',
             borderWidth: 1,
-            borderRadius: 20
+            borderRadius: 20,
+            backgroundColor: 'white',
+            fontSize: 15
         },
     })
 
 
     return (
         <>
-            <ScrollView
+            <BannerAd
+                unitId={TestIds.BANNER}
+                size={BannerAdSize.FULL_BANNER}
+                requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                }}
+            />
+            <FlatList
                 ref={scrollRef}
-                onContentSizeChange={handleContentSizeChange}>
-                <View style={{ height: '90%', padding: 10 }}>
-                    {
-                        userMessage?.map((data: string, index: number) => (
-                            <View key={index} style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', marginBottom: 5 }}>
-                                <Icon
-                                    name='person-pin'
-                                    size={36}
-                                    color={'#000000'}
+                onContentSizeChange={handleContentSizeChange}
+                data={userMessage}
+                renderItem={({ item, index }) => <Chat item={item} index={index} user={sortName} />}
+                style={{ backgroundColor: '#758283' }}
+            />
 
-                                    onPress={() => Alert.alert('Login with Facebook')}
-                                />
-                                <Text>{data}</Text>
-                            </View>
-
-                        ))
-
-                    }
-
-
-                    <View style={{ display: 'flex', flexDirection: "row-reverse", alignItems: 'center', justifyContent: 'flex-start', marginTop: 6 }}>
-                        <Icon
-                            name='person-pin'
-                            size={36}
-                            color={'#000000'}
-
-                            onPress={() => Alert.alert("test")}
-                        />
-                        <Text>Test Message</Text>
-                    </View>
-                </View>
-            </ScrollView>
 
             <View style={style.root} >
                 <View style={style.messageBox}>
@@ -108,14 +125,11 @@ const style = StyleSheet.create({
     root: {
         display: 'flex',
         height: '10%',
-        backgroundColor: '#f1f2f3',
+        backgroundColor: '#758283',
         flexDirection: 'column-reverse',
-
-
     },
     messageBox: {
         display: "flex",
-
         padding: 3,
         flexDirection: 'row',
         width: '100%',

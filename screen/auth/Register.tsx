@@ -5,6 +5,7 @@ import Button from '../../components/Button';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import auth from "@react-native-firebase/auth"
 import firestore from '@react-native-firebase/firestore';
+import { firebase } from '@react-native-firebase/firestore';
 import Alert from '../../Alert/Alert';
 function Register({ navigation }: { navigation: any }) {
 
@@ -25,8 +26,13 @@ function Register({ navigation }: { navigation: any }) {
   //  Function
   function Register(e: GestureResponderEvent) {
     firestore().collection("users").add(userData); // Add the data from a firebase.
-    auth().createUserWithEmailAndPassword(userData.email, userData.password).then(() => {
-      console.log("user is created");
+
+    const name = userData.firstName.trim() + " " + userData.lastName.trim();
+    auth().createUserWithEmailAndPassword(userData.email, userData.password).then(async () => {
+      const update = {
+        displayName: name
+      };
+      await firebase.auth().currentUser?.updateProfile(update)
       navigation.navigate("Login")
     })
       .catch((err) => {

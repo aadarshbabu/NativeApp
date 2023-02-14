@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, Image, TextInput, GestureResponderEvent, Alert 
 import img from "../../assets/img/img.jpg"
 import Button from '../../components/Button';
 import auth from "@react-native-firebase/auth"
+import { firebase } from '@react-native-firebase/firestore';
+
+
 type UserData = {
     email: string,
     password: string
@@ -14,19 +17,25 @@ function Login({ navigation }: { navigation: any }) {
         password: ''
     })
     function login(e: GestureResponderEvent) {
+
         if (userData.email.length < 10 || userData.password.length < 5) {
             Alert.alert("Login", "Invalid User Email and password is not Valid.");
         }
-        auth().signInWithEmailAndPassword(userData.email, userData.password).then(() => {
+
+        auth().signInWithEmailAndPassword(userData.email, userData.password).then(async () => {
+            const user = firebase.auth().currentUser;
             Alert.alert("Login", "Login Success")
             setTimeout(() => {
-                navigation.navigate("Home");
+                navigation.navigate("Home", {
+                    userName: user?.displayName
+                });
             }, 1000)
 
         }).catch((err) => {
             Alert.alert("Login", "Login Successfull")
             console.error(err.message)
         })
+
 
     }
     function SetStateHandler(data: string, name: string) {

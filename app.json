@@ -1,4 +1,8 @@
 {
   "name": "NativeApp",
-  "displayName": "NativeApp"
+  "displayName": "NativeApp",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-4493762495162592~5899926846",
+    "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+  }
 }

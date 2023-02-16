@@ -10,6 +10,9 @@ module.exports = {
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',
+        "eqeqeq": "off",
+        "curly": "error",
+        "quotes": ["error", "double"]
       },
     },
   ],

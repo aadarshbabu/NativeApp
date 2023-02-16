@@ -214,10 +214,10 @@ android {
     }
     signingConfigs {
         release {
-                storeFile file('nativeapp.keystore')
-                storePassword 'test123@'
-                keyAlias 'nativeapp'
-                keyPassword 'test123@'
+                storeFile file('appkey.keystore')
+                storePassword 'aka3232@'
+                keyAlias 'appkeystore'
+                keyPassword 'aka3232@'
         }
     
         debug {

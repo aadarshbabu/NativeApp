@@ -1,38 +1,71 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, GestureResponderEvent, Alert } from 'react-native';
 import img from "../../assets/img/img.jpg"
 import Button from '../../components/Button';
 import auth from "@react-native-firebase/auth"
 import { firebase } from '@react-native-firebase/firestore';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import TostAlert from '../../Alert/Alert';
+import RewardAsyncStore from '../../Store/RewardStore';
+import { context } from '../../Context/createContext';
+import { ActionType } from '../../index.type';
 
 type UserData = {
     email: string,
     password: string
 }
+
+const createUserSortName = ({ userName }: { userName: string }): string => {
+    const name = userName.split(" ")
+    let sortName: string
+    if (name.length >= 2)
+        sortName = name[0][0].toUpperCase() + name[1][0].toUpperCase(); // geting Array 0th element of the array and element 0th location char.
+    else {
+        sortName = name[0][0].toUpperCase()
+    }
+    return sortName
+}
+
 function Login({ navigation }: { navigation: any }) {
 
+    const { setRewardPoint } = RewardAsyncStore()
+    const { state, dispatch } = useContext(context)
+
+    const { alertTop } = TostAlert();
     const [userData, setUserData] = useState<UserData>({
         email: '',
         password: ''
     })
+
     function login(e: GestureResponderEvent) {
 
-        if (userData.email.length < 10 || userData.password.length < 5) {
-            Alert.alert("Login", "Invalid User Email and password is not Valid.");
+        if (userData.password.length < 5) {
+            alertTop({ message: "password is not valid." })
+            return false
         }
 
-        auth().signInWithEmailAndPassword(userData.email, userData.password).then(async () => {
+        auth().signInWithEmailAndPassword(userData.email, userData.password).then(async (value) => {
             const user = firebase.auth().currentUser;
-            Alert.alert("Login", "Login Success")
+            try {
+                await AsyncStorage.setItem("token", JSON.stringify(value));
+                dispatch({ type: ActionType.ADD_USER_ID, payload: value?.user?.uid });
+
+            } catch (error) {
+                console.log(error);
+            }
+
+            if (user?.displayName) {
+                const ST = createUserSortName({ userName: user?.displayName })
+                dispatch({ type: ActionType.SORT_NAME, payload: ST });
+            }
+
+            alertTop({ message: "Login Successful" })
             setTimeout(() => {
-                navigation.navigate("Home", {
-                    userName: user?.displayName
-                });
+                navigation.navigate("Home");
             }, 1000)
 
         }).catch((err) => {
-            Alert.alert("Login", "Login Successfull")
+            alertTop({ message: "something went wrong" })
             console.error(err.message)
         })
 

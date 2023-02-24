@@ -1,1 +1,6 @@
+
 declare module "*.jpg"
+
+
+
+

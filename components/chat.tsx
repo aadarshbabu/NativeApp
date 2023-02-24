@@ -34,7 +34,11 @@ const Chat = ({ item, index, user }: { item: string, index: number, user: string
                     <Image source={Icon} style={styles.imgStyle} />
                 )
             }
-            <Text style={styles.message}>{item}</Text>
+            {
+                index % 2 === 0 && (<Text style={[styles.message, styles.botMessage]}>{item}</Text>) ||
+                (<Text style={styles.message}>{item}</Text>)
+            }
+
         </View>
     )
 }
@@ -42,11 +46,12 @@ const Chat = ({ item, index, user }: { item: string, index: number, user: string
 const styles = StyleSheet.create({
     message: {
         padding: 10,
-        backgroundColor: 'white',
-        color: 'black',
+        backgroundColor: '#1f2937',
+        color: '#F4EFF4',
         margin: 10,
         borderRadius: 5,
-        width: '79%'
+        width: '79%',
+        fontSize: 15
     },
     imgStyle: {
         width: 40,
@@ -56,8 +61,11 @@ const styles = StyleSheet.create({
         color: 'white',
         padding: 10,
         fontSize: 10,
-        backgroundColor: 'blue',
+        backgroundColor: '#0f172a',
         borderRadius: 7
+    },
+    botMessage: {
+        backgroundColor: '#374151',
     }
 })
 

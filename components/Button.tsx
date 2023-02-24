@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from 'react'
-import { Pressable, Text, StyleSheet, View } from 'react-native'
-import { type GestureResponderEvent } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
 
 
 type onPressFunction = {
@@ -12,9 +11,9 @@ type onPressFunction = {
 function Button({ pressFn, btnText }: onPressFunction) {
     return (
         <View style={style.buttonStyle}>
-            <Pressable onPress={pressFn} style={style.button}>
+            <TouchableOpacity onPress={pressFn} style={style.button}>
                 <Text style={style.text}>{btnText}</Text>
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
 }

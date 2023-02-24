@@ -2,7 +2,7 @@ let url ='https://api.openai.com/v1/completions';
 let auth ='Bearer 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';
 export async function getAnswer({question}:{question:string}){
     let body={
-        "model": "text-ada-001", 
+        "model": "text-curie-001", 
         "prompt": question,
         "temperature": 0, 
         "max_tokens": 100

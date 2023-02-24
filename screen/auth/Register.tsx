@@ -6,8 +6,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import auth from "@react-native-firebase/auth"
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/firestore';
-import Alert from '../../Alert/Alert';
+import RewardAsyncStore from '../../Store/RewardStore';
+import TostAlert from '../../Alert/Alert';
 function Register({ navigation }: { navigation: any }) {
+  const { alertTop } = TostAlert()
+  const { setRewardPoint } = RewardAsyncStore()
 
   type UserData = {
     firstName: string,
@@ -25,20 +28,32 @@ function Register({ navigation }: { navigation: any }) {
 
   //  Function
   function Register(e: GestureResponderEvent) {
+    if (userData.password.length < 5) {
+      alertTop({ message: "password is not valid." })
+      return false
+    }
+
     firestore().collection("users").add(userData); // Add the data from a firebase.
 
     const name = userData.firstName.trim() + " " + userData.lastName.trim();
-    auth().createUserWithEmailAndPassword(userData.email, userData.password).then(async () => {
+    auth().createUserWithEmailAndPassword(userData.email, userData.password).then(async (value) => {
       const update = {
         displayName: name
       };
+
       await firebase.auth().currentUser?.updateProfile(update)
-      navigation.navigate("Login")
+      alertTop({ message: "Register Successfull" });
+      firestore().collection("reward").doc().set({ data: { userid: value.user.uid, rewardPoint: 10 } }) // Set the initial Reaward Point.
+
+      setTimeout(() => {
+        navigation.navigate("Login")
+      }, 1000);
+
     })
       .catch((err) => {
-        console.log(err.message)
+        alertTop({ message: "Register Successfull" });
       })
-    console.log("Function Call")
+
   }
 
   function SetStateHandler(data: string, name: string) {

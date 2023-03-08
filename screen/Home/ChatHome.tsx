@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect, useId, useContext } from 'react'
 import { TextInput, View, StyleSheet, Alert, Text, ScrollView, FlatList, GestureResponderEvent, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import { getAnswer } from '../../API/fetchAnswer';
+import { getAnswer } from '../../API/modles/fetchAnswer';
 import Chat from '../../components/chat';
 import { BannerAd, TestIds, BannerAdSize } from 'react-native-google-mobile-ads';
 import { NavigationAction } from '@react-navigation/native';
@@ -9,24 +9,27 @@ import RewardAsyncStore from '../../Store/RewardStore';
 import { context } from '../../Context/createContext';
 import TostAlert from '../../Alert/Alert';
 
-type res = {
-    choices: object[]
+type responce = {
+    role: string,
+    content: string
 }
+type chatMessage = { item: { role: string, content: string }, index: number }
 
 function ChatHome({ navigation }: { navigation: NavigationAction }) {
     const { state } = useContext(context)
     const { removeRewardPoint } = RewardAsyncStore()
-    const [userMessage, setUserMessage] = useState<string[]>();
+    const [userMessage, setUserMessage] = useState<responce[]>();
     const [message, setMessage] = useState<string>('');
-    const [response, setResponse] = useState<string>('');
+    const [response, setResponse] = useState<responce>({ role: '', content: '' });
     const { alertCenter } = TostAlert()
+
 
 
     async function getAns(q: string) {
         if (typeof message === 'string') {
             const query = q.trim();
             const data: any = await getAnswer({ question: query });
-            let msg = data?.choices[0]?.text
+            let msg = data?.choices[0]?.message
             msg && setResponse(msg);
         }
     };
@@ -45,6 +48,7 @@ function ChatHome({ navigation }: { navigation: NavigationAction }) {
     }
 
     function sendMessage() {
+        const question = { role: 'user', content: message }
         if (message?.length > 2) {
             if (state.rewardPoint <= (message.length / 2)) {
                 alertCenter({ message: "Your Reward Point is Low, Earn or Buy the Coin" })
@@ -54,7 +58,7 @@ function ChatHome({ navigation }: { navigation: NavigationAction }) {
             }
             setUserMessage(prev => {
                 if (typeof prev === 'object' && typeof message === 'string')
-                    return [...prev, message]
+                    return [...prev, question]
                 return []
             }
             )
@@ -86,11 +90,6 @@ function ChatHome({ navigation }: { navigation: NavigationAction }) {
         },
     })
 
-
-    function sendData(event: GestureResponderEvent): void {
-        // throw new Error('Function not implemented.');
-    }
-
     return (
         <>
             <BannerAd
@@ -104,7 +103,7 @@ function ChatHome({ navigation }: { navigation: NavigationAction }) {
                 ref={scrollRef}
                 onContentSizeChange={handleContentSizeChange}
                 data={userMessage}
-                renderItem={({ item, index }) => <Chat item={item} index={index} user={state.SortName} />}
+                renderItem={({ item, index }: chatMessage) => <Chat item={item} index={index} user={state.SortName} />}
                 style={{ backgroundColor: '#FFFFFF' }}
             />
 

@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image } from 'react-native'
 import React from 'react'
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 // import Icon from 
+
 const Icon = require('../assets/img/icon.png')
 // import mobileAds from 'react-native-google-mobile-ads';
 
@@ -16,8 +17,13 @@ const Icon = require('../assets/img/icon.png')
 
 // # Banners
 
+type item = {
+    role: string,
+    content: string
+}
 
-const Chat = ({ item, index, user }: { item: string, index: number, user: string }) => {
+const Chat = ({ item, index, user }: { item: item, index: number, user: string }) => {
+
     // mobileAds()
     // .initialize()
     // .then(adapterStatuses => {
@@ -26,20 +32,28 @@ const Chat = ({ item, index, user }: { item: string, index: number, user: string
     // });
     return (
 
-        <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', margin: 5 }}>
-            {index % 2 === 0 ? (
-                <Text style={styles.userCard}>{user}</Text>
-            )
-                : (
+        <View key={index} style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', margin: 5 }}>
+
+            {
+                item.role !== "user" ? (
                     <Image source={Icon} style={styles.imgStyle} />
                 )
+                    : (
+                        <Text style={styles.userCard}>{user}</Text>
+                    )
             }
             {
-                index % 2 === 0 && (<Text style={[styles.message, styles.botMessage]}>{item}</Text>) ||
-                (<Text style={styles.message}>{item}</Text>)
+                item.role !== "user" ? (
+                    <Text selectable style={styles.message}>{item.content}</Text>
+
+                ) : (
+                    <Text selectable style={[styles.message, styles.botMessage]}>{item.content}</Text>
+                )
             }
 
-        </View>
+
+
+        </View >
     )
 }
 

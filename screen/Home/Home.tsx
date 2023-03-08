@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, GestureResponderEvent } from 'react-native'
+import { View, Text, StyleSheet, Pressable, GestureResponderEvent, BackHandler, Alert } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { TouchableOpacity } from 'react-native'
@@ -95,8 +95,18 @@ function Home({ navigation }: { navigation: any }) {
         navigation.navigate("ChatHome")
     }
 
+
+    // Back Handler Which Exit the apk
     function goBack(event: GestureResponderEvent): void {
-        navigation.goBack();
+
+        Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+            {
+                text: 'Cancel',
+                onPress: () => null,
+                style: 'cancel',
+            },
+            { text: 'YES', onPress: () => BackHandler.exitApp() },
+        ]);
     }
 
     return (
@@ -227,3 +237,5 @@ const styles = StyleSheet.create({
 })
 
 export default Home
+
+

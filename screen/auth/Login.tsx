@@ -28,7 +28,6 @@ const createUserSortName = ({ userName }: { userName: string }): string => {
 
 function Login({ navigation }: { navigation: any }) {
 
-    const { setRewardPoint } = RewardAsyncStore()
     const { state, dispatch } = useContext(context)
 
     const { alertTop } = TostAlert();
@@ -67,6 +66,7 @@ function Login({ navigation }: { navigation: any }) {
         }).catch((err) => {
             alertTop({ message: "something went wrong" })
             console.error(err.message)
+            return false;
         })
 
 

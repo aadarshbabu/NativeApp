@@ -7,16 +7,14 @@ function RewardAsyncStore() {
 
     const { state, dispatch } = useContext(context)
 
-
-
-
     const setRewardPoint = ({ rewardPoint }: { rewardPoint: number }) => {
         // console.log(state)
         try {
             console.log("Reward P", rewardPoint)
             console.log(state.userId);
-            firestore().collection("reward").doc(state.userId).update({ data: { userId: state.userId, rewardPoint: state.rewardPoint } });
-            AsyncStorage.setItem("RewardPoint", JSON.stringify((state?.rewardPoint + rewardPoint)), (err) => console.debug("err", err))
+            const totalRewardPoint = state?.rewardPoint + rewardPoint
+            firestore().collection("reward").doc(state.userId).update({ data: { userId: state.userId, rewardPoint: totalRewardPoint } });
+            AsyncStorage.setItem("RewardPoint", JSON.stringify((totalRewardPoint)), (err) => console.debug("err", err))
             dispatch({ type: ActionType.ADD_REWARD, payload: rewardPoint });
         } catch (error) {
             console.log("Set RD P E", error)
@@ -26,6 +24,9 @@ function RewardAsyncStore() {
 
 
     const removeRewardPoint = ({ rewardPoint }: { rewardPoint: number }) => {
+        console.log("REward", rewardPoint);
+        const totalRewardPoint = state?.rewardPoint + rewardPoint
+        firestore().collection("reward").doc(state.userId).update({ data: { userId: state.userId, rewardPoint: totalRewardPoint } });
         AsyncStorage.setItem("RewardPoint", JSON.stringify(rewardPoint))
         dispatch({ type: ActionType.SUB_REWARD, payload: rewardPoint })
     }
@@ -34,25 +35,15 @@ function RewardAsyncStore() {
     const initRewardPoint = () => {
         console.log("initCall");
         try {
-            AsyncStorage.getItem("RewardPoint", (err, res) => {
-                if (err) {
-                    console.log("Error Happen in Reward Init", err.message, err.name, err.stack)
-                    return false
-                }
-                if (res || !res) {
-                    console.log("Res", res)
-                    firestore().collection("reward").doc(state.userId).get({ source: 'server' }).then(documentSnapshot => {
-                        if (documentSnapshot.exists) {
-                            const { rewardPoint } = documentSnapshot.data()?.data;
-                            console.log("RDP", rewardPoint)
-                            dispatch({ type: ActionType.INIT, payload: rewardPoint });
-                        }
-                    });
 
-                    return true
+            firestore().collection("reward").doc(state.userId).get({ source: 'server' }).then(documentSnapshot => {
+                if (documentSnapshot.exists) {
+                    const { rewardPoint } = documentSnapshot.data()?.data;
+                    console.log("RDP", rewardPoint)
+                    dispatch({ type: ActionType.INIT, payload: rewardPoint });
                 }
+            });
 
-            })
         } catch (error) {
             console.log("Init error", error);
         }

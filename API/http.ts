@@ -2,7 +2,7 @@
 
 const gtp = async({question}:{question:string})=>{
     let url ='https://api.openai.com/v1/chat/completions';
-    let auth ='Bearer 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';
+    let auth ='Bearer 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';
 
     let body={
         "model": "gpt-3.5-turbo", 
@@ -22,10 +22,10 @@ const gtp = async({question}:{question:string})=>{
         });
         
         const value_1:any = await res.json();
-        console.log(value_1.choices[0]?.message);
+        console.log(value_1?.choices[0]?.message);
         return value_1;
     } catch (err:any) {
-        return {error:err.message}
+       console.log("Error", err)
     }
 }
 

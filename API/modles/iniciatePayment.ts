@@ -27,7 +27,7 @@ export default async function iniciatePayment({orderId, custumberId, amount,cur}
 } 
 
 export const createPayment = async({amount, userId}:{amount:string, userId:string})=>{
-    const userid = nanoid(10);
+    const userid = nanoid(16);
     const custumberId = userId
     const orderId= userid;
     const getRes = `https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=${orderId}`

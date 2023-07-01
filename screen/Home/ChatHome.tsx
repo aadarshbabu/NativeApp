@@ -29,8 +29,10 @@ function ChatHome({ navigation }: { navigation: NavigationAction }) {
         if (typeof message === 'string') {
             const query = q.trim();
             const data: any = await getAnswer({ question: query });
-            let msg = data?.choices[0]?.message
-            msg && setResponse(msg);
+            if (data) {
+                let msg = data?.choices[0]?.message
+                msg && setResponse(msg);
+            }
         }
     };
 

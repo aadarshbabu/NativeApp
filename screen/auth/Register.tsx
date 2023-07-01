@@ -33,7 +33,12 @@ function Register({ navigation }: { navigation: any }) {
       return false
     }
 
-    firestore().collection("users").add(userData); // Add the data from a firebase.
+    const user = {
+      ...userData,
+      password: null
+    }
+
+    firestore().collection("users").add(user); // Add the data from a firebase.
 
     const name = userData.firstName.trim() + " " + userData.lastName.trim();
     auth().createUserWithEmailAndPassword(userData.email, userData.password).then(async (value) => {

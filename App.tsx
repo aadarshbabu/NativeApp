@@ -16,11 +16,13 @@ import RewarePurchase from './screen/Purchase/RewarePurchase';
 import { context, contextInit } from './Context/createContext';
 import { Store, store } from './Context/store';
 import { reduser } from './Context/reduser';
+import { StatusBar } from 'react-native';
 const stack = createNativeStackNavigator(); // Navigagtion.
 
 const Auth: React.FC = () => {
   return (
     <stack.Navigator >
+
       <stack.Screen name='Login' options={{ headerShown: false }} component={Login} />
       <stack.Screen name='Home' options={{ headerShown: false }} component={Home} initialParams={{ userName: 'test' }} />
       <stack.Screen name='Register' options={{ headerShown: false }} component={Register} />
@@ -54,6 +56,7 @@ function App(): React.ReactNode {
   return (
     <context.Provider value={{ state, dispatch }} >
       <NavigationContainer>
+        <StatusBar backgroundColor={"#111827"}></StatusBar>
         <Auth />
       </NavigationContainer>
     </context.Provider>
